@@ -16,7 +16,8 @@ import org.jsoup.nodes.Document;
 
 public class MainCliThread implements Runnable{
 	
-	int mod = 0, preskociJednako = 0;;
+	//skip =
+	int mod = 0, skip = 0;
 	String keyWords, fileCorpusPrefix;
 	String strSsleepTime, strSizeLimit, strHopCount, strUrlRefreshTime;
 	long sleepTime;
@@ -118,7 +119,7 @@ public class MainCliThread implements Runnable{
 				
 				if(c == '=') {
 					mod = 1;
-					preskociJednako = 1;
+					skip = 1;
 				}
 				
 				if(c == '\n') {
@@ -127,8 +128,8 @@ public class MainCliThread implements Runnable{
 					mod = 0;
 				} else {
 					if(mod == 1) {
-						if(preskociJednako == 1) {
-							preskociJednako = 0;
+						if(skip == 1) {
+							skip = 0;
 							continue;
 						}
 						sb.append(c);

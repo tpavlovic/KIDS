@@ -44,17 +44,14 @@ public class FileScannerThreadPool {
 			sum += f.length();
 			
 			if(sum > DirectoryParams.sizeLimit) {
-				//System.out.println("Salju se sledeci fajlovi: " + fileForSending);
-				completionService.submit(new JobForFileScanner((List<File>) ((CopyOnWriteArrayList)fileForSending).clone() ,job.getQuery()));
-				results.add(completionService.take());
+				results.add(threadPool.submit(new JobForFileScanner((List<File>) ((CopyOnWriteArrayList)fileForSending).clone() ,job.getQuery())));
 				sum = 0;
 				fileForSending.clear();
 			}
 		}
 		
 		if(!(fileForSending.isEmpty())) {
-			completionService.submit(new JobForFileScanner((List<File>) ((CopyOnWriteArrayList)fileForSending).clone() ,job.getQuery()));
-			results.add(completionService.take());
+			results.add(threadPool.submit(new JobForFileScanner((List<File>) ((CopyOnWriteArrayList)fileForSending).clone() ,job.getQuery())));
 			sum = 0;
 			fileForSending.clear();
 		}

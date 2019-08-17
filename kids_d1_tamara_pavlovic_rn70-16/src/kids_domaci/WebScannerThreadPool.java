@@ -35,7 +35,6 @@ public class WebScannerThreadPool {
 	private CompletionService<ConcurrentHashMap<String, Integer>> completionService = new ExecutorCompletionService<>(threadPool);
 	private List<Future<ConcurrentHashMap<String, Integer>>> results = Collections.synchronizedList(new ArrayList<Future<ConcurrentHashMap<String, Integer>>>());
 	public static List<String> listOfURLs = Collections.synchronizedList(new ArrayList<String>());
-	private ScanningJob scanningJob;
 	boolean end = false;
 	int counter, brojac = 0;
 	private AtomicBoolean find = new AtomicBoolean(false);
@@ -93,8 +92,9 @@ public class WebScannerThreadPool {
 	    	
 	    	
 	    if(listOfURLs.isEmpty()) {
-	    	completionService.submit(new JobForWebScanner(f ,job.getQuery()));
-	 		results.add(completionService.take());
+	    	//threadPool.submit(new JobForWebScanner(f ,job.getQuery()));
+	    	//completionService.submit(new JobForWebScanner(f ,job.getQuery()));
+	 		results.add(threadPool.submit(new JobForWebScanner(f ,job.getQuery())));
 	 		listOfURLs.add(job.getQuery());
 	    } else if(!(listOfURLs.isEmpty())){
 	    	for (String element : listOfURLs) {
@@ -108,8 +108,9 @@ public class WebScannerThreadPool {
 	    	if(find.get() == t) {
 		 		find.set(false);
 	    	} else if(find.get() == fal){
-	    		completionService.submit(new JobForWebScanner(f ,job.getQuery()));
-		 		results.add(completionService.take());    
+	    		//completionService.submit(new JobForWebScanner(f ,job.getQuery()));
+		 		//results.add(completionService.take());    
+	    		results.add(threadPool.submit(new JobForWebScanner(f ,job.getQuery())));
 		 		listOfURLs.add(job.getQuery());
             	
 	    	}
